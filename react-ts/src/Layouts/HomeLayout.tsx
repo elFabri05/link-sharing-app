@@ -1,10 +1,10 @@
-import LargeLogo from '../assets/logo-devlinks-large.svg'
-
+import { useState } from 'react'
 import Login from '../Components/Home/Login.tsx'
 import CreateAccount from '../Components/Home/CreateAccount.tsx'
-import { useState } from 'react'
+import './HomeLayout.css'
+import LargeLogo from '../assets/logo-devlinks-large.svg'
 
-export default function HomeLayout(){
+ function HomeLayout(){
     const [toggleHome, setToggleHome] = useState(true)
 
     const setHome = (): void => {
@@ -12,10 +12,15 @@ export default function HomeLayout(){
       }
 
     return(
-        <div>
+        <div className='home-layout'>
             <img src={LargeLogo} alt="Devlinks large logo" />
-            <Login propFunc={setHome} homeState={toggleHome}/>
-            <CreateAccount propFunc={setHome} homeState={toggleHome}/>
+            { toggleHome ? (
+                <Login propFunc={setHome}/> 
+              )  : (
+                <CreateAccount propFunc={setHome}/>
+            )}
         </div>
     )
 }
+
+export default HomeLayout

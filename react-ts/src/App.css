@@ -1,0 +1,68 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    color: #333333;
+    /* background-color: #EFEBFF; */
+    font-family: 'Instrument Sans', sans-serif;  
+    width: 375px;
+}
+
+button:hover{
+    cursor: pointer;
+}
+
+h3{
+    font-size: 24px;
+}
+
+p{
+    font-size: 16px;
+    color: #737373;
+}
+
+label{
+    font-size: 12px;
+}
+
+input{
+    height: 48px;
+    width: 88%;
+    border-radius: 5px;
+    border: 1px solid #D9D9D9;
+    padding-left: 1rem;
+}
+
+.bg-button{
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    background-color: #633CFF;
+    color: #FFFFFF;
+    font-weight: 700;
+    height: 46px;
+    width: 88%;
+    margin-top: 10px; /*check this! */
+}
+
+.bg-inverted-button{
+    /* text-decoration: none; */
+    border: 1px solid #633CFF;
+    border-radius: 8px;
+    background-color: #FFFFFF ;
+    color: #633CFF;
+    font-weight: 700;
+    height: 46px;
+    width: 88%;
+}
+
+.s-button{
+    text-decoration: none;
+    border: none;
+    background-color: #FFFFFF;
+    color: #633CFF;
+}

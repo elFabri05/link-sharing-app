@@ -3,14 +3,10 @@ import './Home.css'
 import emailIcon from '../../assets/icon-email.svg'
 import passwordIcon from '../../assets/icon-password.svg'
 
-// type Props = {
-//     propFunc: () => void
-//     homeState: boolean
-//   }
-//   { propFunc, homeState }: Props
-const Login = () => {
-
-    
+type Props = {
+    propFunc: () => void
+  }
+const Login = ({ propFunc }: Props) => {
 
     return(
         <div>
@@ -27,13 +23,13 @@ const Login = () => {
                 style={{
                     backgroundImage : `url(${emailIcon})`,
                     backgroundRepeat: 'no-repeat',
+                    backgroundPosition: '.5rem .9rem',
                     paddingLeft: '30px',
                   }}
                   />
                 <br />
                 <label htmlFor="password">Password</label>
-                backgroundPosition: '10px 10px',
-    <br />
+                <br />
                 <input 
                 type="text"
                 id='password'
@@ -42,13 +38,16 @@ const Login = () => {
                 style={{
                     backgroundImage : `url(${passwordIcon})`,
                     backgroundRepeat: 'no-repeat',
+                    backgroundPosition: '.5rem .9rem',
                     paddingLeft: '30px',
                   }}
                   />
             </form>
-            <Link to=""><button>Login</button></Link>
-            <p>Don't you have an account?</p>
-            <Link to="">Create account</Link>
+            <Link to="/settings"><button className='bg-button'>Login</button></Link>
+            <div className='baseline'>
+              <p>Don't you have an account?</p>
+              <button onClick={propFunc} className='s-button'>Create account</button>
+            </div>
         </div>
     )
 }

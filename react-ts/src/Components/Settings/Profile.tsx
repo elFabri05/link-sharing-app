@@ -45,7 +45,7 @@ export default function Profile(){
                 </form>
                 <p>* mandatory fields.</p>
             </div>
-            <Link to=""><button>Save</button></Link>
+            <Link to=""><button className="bg-button">Save</button></Link>
         </div>
     )
 }

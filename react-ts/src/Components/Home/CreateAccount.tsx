@@ -3,13 +3,12 @@ import './Home.css'
 import emailIcon from '../../assets/icon-email.svg'
 import passwordIcon from '../../assets/icon-password.svg'
 
-export default function CreateAccount(){
+type Props = {
+  propFunc: () => void
+}
 
-// type Props = {
-//     propFunc: () => void
-//     homeState: boolean
-//   }
-//   { propFunc, homeState }: Props
+export default function CreateAccount({ propFunc}: Props){
+
 
     return(
         <div>
@@ -22,11 +21,11 @@ export default function CreateAccount(){
                 <input 
                 type="email"
                 id='emailAdress'
-                name='emailAdress'
-                placeholder='e.g. alex@gmail.com' 
+                placeholder='example@yourmail.com' 
                 style={{
                     backgroundImage : `url(${emailIcon})`,
                     backgroundRepeat: 'no-repeat',
+                    backgroundPosition: '.5rem .9rem',
                     paddingLeft: '30px',
                   }}
                   />
@@ -41,6 +40,7 @@ export default function CreateAccount(){
                 style={{
                     backgroundImage : `url(${passwordIcon})`,
                     backgroundRepeat: 'no-repeat',
+                    backgroundPosition: '.5rem .9rem',
                     paddingLeft: '30px',
                   }}
                   />
@@ -55,14 +55,17 @@ export default function CreateAccount(){
                 style={{
                     backgroundImage : `url(${passwordIcon})`,
                     backgroundRepeat: 'no-repeat',
+                    backgroundPosition: '.5rem .9rem',
                     paddingLeft: '30px',
                   }}
                   />
             </form>
             <p>Password must contain at least 8 characters</p>
-            <Link to=""><button>Create new account</button></Link>
-            <p>Already have an account?</p>
-            <Link to="">Login</Link>
+            <Link to="/"><button onClick={propFunc} className='bg-button'>Create new account</button></Link>
+            <div className='baseline'>
+              <p>Already have an account?</p>
+              <button onClick={propFunc} className='s-button'>Login</button>
+            </div>
         </div>
     </div>
     )
