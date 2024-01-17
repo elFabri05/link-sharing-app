@@ -1,17 +1,25 @@
 import {useState} from "react"
 import { Link } from "react-router-dom"
+import { useForm, Controller } from 'react-hook-form'
 import Select from 'react-select'
 import "./Settings.css"
+import options from "./options"
 
 import ilustrationEmpty from "../../assets/illustration-empty.svg"
 import dragAndDrop from "../../assets/icon-drag-and-drop.svg"
 import LinkIcon from "../../assets/icon-link.svg"
 
-import options from "./options"
-
  function Links(){
     const [ addNewLink, setAddNewLink ] = useState<boolean>(false)
     const [selectedOptions, setSelectedOptions] = useState<number[]>([])
+
+    const { control, handleSubmit, register } = useForm()
+
+    interface MyFormData {
+        [key: string]: string
+      }
+
+    const onSubmit = (data: MyFormData) => console.log(data)
 
         const addedLink = (): void => {
         setAddNewLink(true)
@@ -19,10 +27,8 @@ import options from "./options"
         setSelectedOptions([...selectedOptions, newNumber])
     }
 
-    const removeLink = (linkIndex : number): void => {
-        const updatedLinks = selectedOptions
-            .filter((_, index) => index !== linkIndex)
-            .map((_, index) => index + 1) // Adjust the numbers after removing
+    const removeLink = (linkIndex: number): void => {
+        const updatedLinks = selectedOptions.filter((_, index) => index !== linkIndex)
         setSelectedOptions(updatedLinks)
 
         if (updatedLinks.length === 0){
@@ -45,33 +51,41 @@ import options from "./options"
                             We're here to help you share your profiles with everyone!</p>
                     </div>
                     )    :   (
-                    selectedOptions.map((num, index) => {
-                        return(
-                            <div key ={index}>
-                                <div>
-                                    <span><img src={dragAndDrop} alt="Drag and drop Icon" /> Link # {num}</span>
-                                    <button onClick={() => removeLink(index)}>Remove</button>
-                                </div>
-                                <form action="">
-                                    <label htmlFor="dropdown">Platform</label>
-                                    <Select options={options} id="dropdown"/>
-                                    <label htmlFor="link">Link</label>
-                                    <br />
-                                    <input 
-                                        type="text" 
-                                        id="link"
-                                        name='link'
-                                        placeholder='e.g. https://www.github.com/example' 
-                                        style={{
-                                            backgroundImage : `url(${LinkIcon})`,
-                                            backgroundRepeat: 'no-repeat',
-                                            paddingLeft: '30px',
-                                        }}
-                                        />
-                                </form>
-                            </div>
-                        )
-                    })            
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                    {selectedOptions.map((num, index) => (
+                        <div key={index}>
+                        <div>
+                            <span><img src={dragAndDrop} alt="Drag and drop Icon" /> Link # {num}</span>
+                            <button onClick={() => removeLink(index)}>Remove</button>
+                        </div>
+                        <label htmlFor={"dropdown" + index}>Platform</label>
+                        <Controller
+                            name={"platform" + index}
+                            control={control}
+                            render={({ field }) => (
+                            <Select 
+                                {...field} 
+                                options={options} 
+                                placeholder="Select platform" 
+                            />
+                            )}
+                        />
+                        <label htmlFor={"link" + index}>Link</label>
+                        <br />
+                        <input 
+                            {...register("link" + index)}
+                            type="text" 
+                            id={"link" + index}
+                            placeholder='e.g. https://www.github.com/example' 
+                            style={{
+                            backgroundImage : `url(${LinkIcon})`,
+                            backgroundRepeat: 'no-repeat',
+                            paddingLeft: '30px',
+                            }}
+                        />
+                        </div>
+                    ))}
+                    </form>
                     )
             }
                 <Link to=""><button className="bg-button">Save</button></Link>

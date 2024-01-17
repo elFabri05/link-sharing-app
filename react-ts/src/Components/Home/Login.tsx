@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import './Home.css'
 import emailIcon from '../../assets/icon-email.svg'
 import passwordIcon from '../../assets/icon-password.svg'
@@ -6,16 +7,30 @@ import passwordIcon from '../../assets/icon-password.svg'
 type Props = {
     propFunc: () => void
   }
+
+type Inputs = {
+  emailAddress: string
+  password: string
+}
+
 const Login = ({ propFunc }: Props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>()
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
 
     return(
         <div>
             <h3>Login</h3>
             <p>Add your details below to get back into the app</p>
-            <form >
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <label htmlFor="emailAdress">Email adress</label>
                 <br /> 
                 <input 
+                {...register('emailAddress', { required: 'Email is required', 
+                pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' } })}
                 type="email"
                 id='emailAdress'
                 name='emailAdress'
@@ -27,10 +42,12 @@ const Login = ({ propFunc }: Props) => {
                     paddingLeft: '30px',
                   }}
                   />
+                {errors.emailAddress && <p>{errors.emailAddress.message}</p>}
                 <br />
                 <label htmlFor="password">Password</label>
                 <br />
                 <input 
+                {...register('password', { required: 'Password is required' })}
                 type="text"
                 id='password'
                 name='password'
@@ -42,8 +59,11 @@ const Login = ({ propFunc }: Props) => {
                     paddingLeft: '30px',
                   }}
                   />
+                {errors.password && <p>{errors.password.message}</p>}
             </form>
-            <Link to="/settings"><button className='bg-button'>Login</button></Link>
+            <Link to="/settings">
+                <button type="submit" className='bg-button'>Login</button>
+            </Link>
             <div className='baseline'>
               <p>Don't you have an account?</p>
               <button onClick={propFunc} className='s-button'>Create account</button>

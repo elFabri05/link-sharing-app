@@ -1,8 +1,21 @@
 import { Link } from "react-router-dom"
+import { useForm } from 'react-hook-form'
 import "./Settings.css"
 import uploadImage from "../../assets/icon-upload-image.svg"
 
+interface ProfileForm {
+    firstName: string
+    lastName: string
+    email: string
+  }
+
 export default function Profile(){
+
+    const { register, handleSubmit, formState: { errors } } = useForm()
+
+    const onSubmit = (data: ProfileForm) : void => {
+        console.log(data)
+      }
 
     return(
         <div>
@@ -18,30 +31,41 @@ export default function Profile(){
                 <p>Image must be below 1024x1024px. Use PNG or JPG format.</p>
             </div>
             <div>
-                <form action="">
-                    <label htmlFor="firstName">First Name*</label>
-                    <br />
-                    <input 
+                 <form onSubmit={handleSubmit(onSubmit)}>
+                <label htmlFor="firstName">First Name*</label>
+                <br />
+                <input 
+                    {...register("firstName", { required: true })}
                     type="text" 
                     id="firstName"
-                    name="firstName"
-                    placeholder="First Name"/>
-                    <br />
-                    <label htmlFor="firstName">Last Name*</label>
-                    <br />
-                    <input 
+                    placeholder="First Name"
+                />
+                {errors.firstName && <span>This field is required</span>}
+                <br />
+
+                <label htmlFor="lastName">Last Name*</label>
+                <br />
+                <input 
+                    {...register("lastName", { required: true })}
                     type="text" 
                     id="lastName"
-                    name="lastName"
-                    placeholder="Last Name"/>
-                    <br />
-                    <label htmlFor="firstName">Email</label>
-                    <br />
-                    <input 
+                    placeholder="Last Name"
+                />
+                {errors.lastName && <span>This field is required</span>}
+                <br />
+
+                <label htmlFor="email">Email</label>
+                <br />
+                <input 
+                    {...register("email", { required: "Email is required", pattern: /^\S+@\S+$/i })}
                     type="email" 
                     id="email"
-                    name="email"
-                    placeholder="Your email adress"/>
+                    placeholder="Your email address"
+                />
+                {errors.email && <span>Invalid email address</span>}
+                <br />
+
+                <input type="submit" />
                 </form>
                 <p>* mandatory fields.</p>
             </div>
