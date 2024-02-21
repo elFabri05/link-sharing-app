@@ -14,13 +14,18 @@ type Inputs = {
   confirmPassword: string
 }
 
-export default function CreateAccount({ propFunc}: Props){
+export default function CreateAccount({propFunc}: Props){
+  
   const {
     register,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>()
+
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+
+  const createPassword = watch("createPassword");
 
     return(
         <div>
@@ -66,7 +71,9 @@ export default function CreateAccount({ propFunc}: Props){
                 <label htmlFor="confirmPassword">Confirm password</label>
                 <br />
                 <input 
-                {...register('confirmPassword', { required: 'Please confirm your password' })}
+                {...register("confirmPassword", { 
+                  validate: value => value === createPassword || "Passwords do not match"
+                })}
                 type="password"
                 id='confirmPassword'
                 name='confirmPassword'
