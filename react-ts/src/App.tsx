@@ -1,21 +1,27 @@
-import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom'
-// import { BrowserRouter } from 'react-router-dom'
-import './App.css'
+import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom';
+import './App.css';
 
-// import Login from './Components/Home/Login'
-// import CreateAccount from './Components/Home/CreateAccount'
-// import Links from './Components/Home/Links'
-// import Profile from './Components/Settings/Profile'
-
-import HomeLayout from './Layouts/HomeLayout'
-import SettingsLayout from './Layouts/SettingsLayout'
+import HomeLayout from './Layouts/HomeLayout'; 
+import Login from './Components/Home/Login';
+import CreateAccount from './Components/Home/CreateAccount';
+import SettingsLayout from './Layouts/SettingsLayout';
+import Links from './Components/Settings/Links';
+import ProfileSetting from './Components/Settings/ProfileSetting';
 
 function App() {
 
   const router = createBrowserRouter(createRoutesFromElements(
     <>
-      <Route path="/" element={<HomeLayout />} />
-      <Route path="/settings" element={<SettingsLayout />} />
+      <Route path="/" element={<HomeLayout />}>
+        <Route index element={<Login />} />
+        <Route path="create-account" element={<CreateAccount />} />
+      </Route>
+      <Route path="/links-settings" element={<SettingsLayout />}>
+        <Route index element={<Links />}/>
+      </Route>
+      <Route path="/profile-settings" element={<SettingsLayout />}>
+        <Route index element={<ProfileSetting />}/>
+      </Route>
     </>
   ))
 
@@ -25,7 +31,3 @@ function App() {
 }
 
 export default App
-
-{/* <BrowserRouter>
-   <SettingsLayout /> 
-</BrowserRouter> */}

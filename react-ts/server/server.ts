@@ -1,13 +1,15 @@
 import express from 'express';
-import session from 'express-session';
-import { body, validationResult } from 'express-validator';
 import passport from 'passport';
 import passportLocal from 'passport-local';
-const LocalStrategy = passportLocal.Strategy;
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import session from 'express-session';
+import multer from 'multer';
+import sharp from 'sharp';
+
 
 const Schema = mongoose.Schema;
+const LocalStrategy = passportLocal.Strategy;
 const saltRounds = 10;
 
 const app = express();
@@ -25,40 +27,24 @@ const LinkSchema = new Schema({
 });
 
 const UserSchema = new Schema({
-  username: { type: String, unique: true, required: true },
-  password: String,
-  emailAddress: String,
-  links: [LinkSchema], 
+  emailAddress: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
+  links: [LinkSchema],
+  profilePicture: { type: Buffer },
+  firstName: String,
+  lastName: String,
+  profileEmail: String,
 });
 
 // Compile the schema into a model if it hasn't been already compiled
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
-// Validation Middleware
-const validateUser = [
-  body('username').trim().escape(),
-  body('password')
-    .isLength({ min: 8 }).withMessage('Password Must Be at Least 8 Characters')
-    .matches('[0-9]').withMessage('Password Must Contain a Number')
-    .matches('[A-Z]').withMessage('Password Must Contain an Uppercase Letter'),
-  body('emailAddress').isEmail().withMessage('Invalid email address').normalizeEmail(),
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-  },
-];
-
-// Route with Validation Middleware
-app.post('/submit-form', validateUser, async (req, res) => {
-  const { username, password, emailAddress } = req.body;
+app.post('/', async (req, res) => {
+  const { emailAddress, password } = req.body;
   try {
     const newUser = await User.create({
-      username,
-      password,
       emailAddress,
+      password,
     });
     res.status(201).json(newUser);
   } catch (error) {
@@ -68,11 +54,9 @@ app.post('/submit-form', validateUser, async (req, res) => {
 });
 
 UserSchema.pre('save', async function(next) {
-  // Only hash the password if it has been modified (or is new)
   if (!this.isModified('password')) return next();
 
   try {
-    // Generate a salt and hash the password
     const salt = await bcrypt.genSalt(saltRounds);
     this.password = await bcrypt.hash(this.password, salt);
     next();
@@ -81,23 +65,71 @@ UserSchema.pre('save', async function(next) {
   }
 });
 
-// Corrected Express route for updating user links
-app.post('/update-links', async (req, res) => {
-  const { username, links } = req.body; // Ensure username is included in your request for identification
-  
+app.post('/links-settings', async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).send('User is not authenticated');
+  }
+
+  const userId = req.user._id;
+  const { newLink } = req.body;
+
   try {
-    // Directly update the user's links without re-processing if they match the LinkSchema
-    const updatedUser = await User.findOneAndUpdate(
-      { username: username }, // Use username to find the user
-      { $set: { links: links } }, // Update links directly
-      { new: true, runValidators: true } // Return the updated document
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $push: { links: newLink } },
+      { new: true, runValidators: true }
     );
 
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    res.json(updatedUser); // Send back the updated user
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+const upload = multer({
+  limits: { fileSize: 500000 },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) { 
+      return cb(new Error('Please upload an image.'));
+    }
+    cb(undefined, true);
+  }
+});
+
+app.post('/profile-settings]', upload.single('profilePicture'), async (req, res) => {
+  const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer();
+  
+  await User.findByIdAndUpdate(req.user.id, { profilePicture: buffer });
+  res.send();
+}, (error, req, res ) => {
+  res.status(400).send({ error: error.message });
+});
+
+app.post('/profile-settings', async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).send('User is not authenticated');
+  }
+
+  const userId = req.user._id;
+  const { firstName, lastName, email: profileEmail } = req.body; // Assuming the form's email corresponds to profileEmail in the schema
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: { firstName, lastName, profileEmail } },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(updatedUser);
   } catch (error) {
     console.error('Error updating user:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -157,8 +189,6 @@ app.get("/", (req, res) => {
   res.render("index", { user: req.user });
 });
 
-
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`)
 })
-

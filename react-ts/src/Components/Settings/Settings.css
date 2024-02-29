@@ -7,4 +7,23 @@
     width: 97%;
     margin: 1rem;
     background-color: #FFFFFF;
+    background-color: #EFEBFF;
 } */
+.img-upload-containter{
+    background-color: #D9D9D9;
+    width: 193px;
+    height: 193px;
+    border-radius: 5px;
+    padding: auto;
+    display: grid;
+    place-items: center;
+}
+
+.img-upload{
+    background-image: url("../../assets/icon-upload-image.svg");
+    background-repeat: no-repeat;
+    background-size: auto;
+    background-position: center;  
+    border: none;
+    text-indent: -9999px;
+}

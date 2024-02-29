@@ -1,25 +1,43 @@
-import { Link } from 'react-router-dom'
-import { useForm, SubmitHandler } from 'react-hook-form'
-import './Home.css'
-import emailIcon from '../../assets/icon-email.svg'
-import passwordIcon from '../../assets/icon-password.svg'
-
-type Props = {
-    propFunc: () => void
-  }
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import './Home.css';
+import emailIcon from '../../assets/icon-email.svg';
+import passwordIcon from '../../assets/icon-password.svg';
 
 type Inputs = {
-  emailAddress: string
-  password: string
-}
+  emailAddress: string,
+  password: string,
+};
 
-const Login = ({ propFunc }: Props) => {
+function Login(){
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>()
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+
+    try {
+        const response = await fetch('http://localhost:3300/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const responseData = await response.json();
+      console.log('Login successful:', responseData);
+      navigate('/links-settings');
+    } catch (error) {
+      console.error('Failed to login:', error);
+    }
+  };
 
     return(
         <div>
@@ -60,16 +78,16 @@ const Login = ({ propFunc }: Props) => {
                   }}
                   />
                 {errors.password && <p>{errors.password.message}</p>}
+                <input type="submit" value='Login' className='bg-button' />
             </form>
-            <Link to="/settings">
-                <button type="submit" className='bg-button'>Login</button>
-            </Link>
             <div className='baseline'>
               <p>Don't you have an account?</p>
-              <button onClick={propFunc} className='s-button'>Create account</button>
+            <Link to="/create-account">
+              <button className='s-button'>Create account</button>
+            </Link>
             </div>
         </div>
-    )
+    );
 }
 
-export default Login
+export default Login;

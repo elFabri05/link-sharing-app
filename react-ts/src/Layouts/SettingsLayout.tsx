@@ -1,27 +1,24 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import "./SettingsLayout.css"
+import { useState } from "react";
+import { Link, Outlet } from "react-router-dom";
+import "./SettingsLayout.css";
 
-import smallLogo from "../assets/logo-devlinks-small.svg"
-import iconLink from "../assets/icon-link.svg"
-import iconDetail from "../assets/icon-profile-details-header.svg"
-import iconPreview from "../assets/icon-preview-header.svg"
-
-import Links from "../Components/Settings/Links"
-import Profile from "../Components/Settings/Profile"
+import smallLogo from "../assets/logo-devlinks-small.svg";
+import iconLink from "../assets/icon-link.svg";
+import iconDetail from "../assets/icon-profile-details-header.svg";
+import iconPreview from "../assets/icon-preview-header.svg";
 
 function SettingsLayout(){
 
-    const [activeTab, setActiveTab] = useState<string>("links-settings")
+    const [activeTab, setActiveTab] = useState<string>("links-settings");
 
     const toggleActiveTab = () : void => {
         if (activeTab === "links-settings"){
-            setActiveTab("personal-details")
+            setActiveTab("personal-details");
         }
         else if (activeTab === "personal-details"){
-            setActiveTab("links-settings")
+            setActiveTab("links-settings");
         }
-    }
+    };
 
     return(
         <div>
@@ -31,7 +28,7 @@ function SettingsLayout(){
                     alt="Devlinks small logo" 
                     className="dev-links"/>
                     </Link>
-                <Link to="/settings">
+                <Link to="/links-settings">
                     <div className={`tab-container ${activeTab === "links-settings" ? "active-tab" : ""}`}>
                         <img src={iconLink} 
                         alt="Links settings Icon" 
@@ -39,7 +36,7 @@ function SettingsLayout(){
                         onClick={toggleActiveTab}/>
                     </div>
                 </Link>
-                <Link to="/settings">
+                <Link to="/profile-settings">
                     <div className={`tab-container ${activeTab === "personal-details" ? "active-tab" : ""}`}>
                         <img src={iconDetail} 
                         alt="Personal details Icon" 
@@ -53,14 +50,9 @@ function SettingsLayout(){
                     className="preview-icon"/>
                 </Link>
             </div>
-            {(activeTab === "links-settings") ? (
-                <Links />
-            ) : (activeTab === "personal-details") ? (
-                <Profile />
-            ) : null
-            }
+            <Outlet/>
         </div>
-    )
+    );
 }
 
-export default SettingsLayout
+export default SettingsLayout;
