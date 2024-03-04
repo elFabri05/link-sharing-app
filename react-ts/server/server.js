@@ -7,7 +7,6 @@ import session from 'express-session';
 import multer from 'multer';
 import sharp from 'sharp';
 
-
 const Schema = mongoose.Schema;
 const LocalStrategy = passportLocal.Strategy;
 const saltRounds = 10;
@@ -16,8 +15,11 @@ const app = express();
 app.use(express.json());
 const port = 3300;
 
-const mongoDb = "mongodb+srv://fabriziomaffoni:Papurri1!@cluster0.ath8pdx.mongodb.net/";
-mongoose.connect(mongoDb);
+const mongoDb = "mongodb+srv://fabriziomaffoni:lRLPADPx9PhiX9KT@cluster0.ath8pdx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+mongoose.connect(mongoDb)
+  .then(() => console.log('MongoDB connected successfully.'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo connection error"));
 
@@ -116,7 +118,7 @@ app.post('/profile-settings', async (req, res) => {
   }
 
   const userId = req.user._id;
-  const { firstName, lastName, email: profileEmail } = req.body; // Assuming the form's email corresponds to profileEmail in the schema
+  const { firstName, lastName, email: profileEmail } = req.body;
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
