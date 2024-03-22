@@ -1,18 +1,21 @@
-import { Link } from 'react-router-dom';
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useState } from 'react';
+import { Link , useNavigate } from 'react-router-dom';
+import { useForm, SubmitHandler} from "react-hook-form";
 import './Home.css';
 import emailIcon from '../../assets/icon-email.svg';
 import passwordIcon from '../../assets/icon-password.svg';
 
 
 type Inputs = {
-  emailAddress: string
-  createPassword: string
-  confirmPassword: string
+  emailAddress: string,
+  password: string,
+  confirmPassword: string,
 };
 
-function CreateAccount(){
-  
+function CreateAccount(){ 
+  const [tryAgain, setTryAgain] = useState<boolean>(false)
+  const navigate = useNavigate();
+
   const {
     register,
     watch,
@@ -30,18 +33,18 @@ function CreateAccount(){
         body: JSON.stringify(data),
       });
   
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      if (response.status === 201) {
+        navigate('/');
+      } else {
+        setTryAgain(true)
+        console.error('Failed to create user please try again');
       }
-  
-      const responseData = await response.json();
-      console.log('Login successful:', responseData);
     } catch (error) {
-      console.error('Failed to login:', error);
+      console.error('Failed to create account:', error);
     }
   };
 
-  const createPassword = watch("createPassword");
+  const password = watch("password");
 
     return(
         <div>
@@ -69,11 +72,11 @@ function CreateAccount(){
                 <label htmlFor="password">Create password</label>
                 <br />
                 <input 
-                {...register('createPassword', { required: 'Password is required', 
+                {...register('password', { required: 'Password is required', 
                 minLength: { value: 8, message: 'Password must be at least 8 characters' } })}
                 type="password"
-                id='createPassword'
-                name='createPassword'
+                id='password'
+                name='password'
                 placeholder='At least 8 characters' 
                 style={{
                     backgroundImage : `url(${passwordIcon})`,
@@ -82,13 +85,13 @@ function CreateAccount(){
                     paddingLeft: '30px',
                   }}
                   />
-                {errors.createPassword && <p>{errors.createPassword.message}</p>}
+                {errors.password && <p>{errors.password.message}</p>}
                 <br />
                 <label htmlFor="confirmPassword">Confirm password</label>
                 <br />
                 <input 
                 {...register("confirmPassword", { 
-                  validate: value => value === createPassword || "Passwords do not match"
+                  validate: value => value === password || "Passwords do not match"
                 })}
                 type="password"
                 id='confirmPassword'
@@ -103,7 +106,8 @@ function CreateAccount(){
                   />
                 {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
             <p>Password must contain at least 8 characters</p>
-            <input type="submit" className='bg-button' value='Create new account' />
+            <button type="submit" className='bg-button'>Create new account</button>
+            {tryAgain ? <p className='error'>Failed to create user please try again</p> : ""}
             </form>
             <div className='baseline'>
               <p>Already have an account?</p>

@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import './Home.css';
@@ -10,6 +11,7 @@ type Inputs = {
 };
 
 function Login(){
+  const [auth, setAuth] = useState<boolean>(true)
   const navigate = useNavigate();
   const {
     register,
@@ -19,21 +21,23 @@ function Login(){
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
 
     try {
-        const response = await fetch('http://localhost:3300/', {
+        const response = await fetch('http://localhost:3300', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
   
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log('Login successful:', responseData);
+        navigate('/links-settings');
+      } else {
+        setAuth(false)
+        console.error('Failed to create user please try again');
       }
-  
-      const responseData = await response.json();
-      console.log('Login successful:', responseData);
-      navigate('/links-settings');
     } catch (error) {
       console.error('Failed to login:', error);
     }
@@ -44,14 +48,14 @@ function Login(){
             <h3>Login</h3>
             <p>Add your details below to get back into the app</p>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <label htmlFor="emailAdress">Email adress</label>
+                <label htmlFor="emailAddress">Email adress</label>
                 <br /> 
                 <input 
                 {...register('emailAddress', { required: 'Email is required', 
                 pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' } })}
                 type="email"
-                id='emailAdress'
-                name='emailAdress'
+                id='emailAddress'
+                name='emailAddress'
                 placeholder='e.g. alex@gmail.com' 
                 style={{
                     backgroundImage : `url(${emailIcon})`,
@@ -66,7 +70,7 @@ function Login(){
                 <br />
                 <input 
                 {...register('password', { required: 'Password is required' })}
-                type="text"
+                type="password"
                 id='password'
                 name='password'
                 placeholder='Enter your password' 
@@ -78,7 +82,8 @@ function Login(){
                   }}
                   />
                 {errors.password && <p>{errors.password.message}</p>}
-                <input type="submit" value='Login' className='bg-button' />
+                <button type="submit" className='bg-button'>Login</button>
+                {!auth ? <p className='error'>Invalid email or password</p> : ""}
             </form>
             <div className='baseline'>
               <p>Don't you have an account?</p>

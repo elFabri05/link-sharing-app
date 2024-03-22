@@ -44,7 +44,7 @@ function SettingsLayout(){
                         onClick={toggleActiveTab}/>
                     </div>
                 </Link>
-                <Link to="">
+                <Link to="/profile">
                     <img src={iconPreview} 
                     alt="Preview Icon" 
                     className="preview-icon"/>

@@ -66,3 +66,8 @@ input{
     background-color: #FFFFFF;
     color: #633CFF;
 }
+
+.error{
+    color: #FF3939;
+    font-weight: 500;
+}

@@ -6,7 +6,8 @@ import Login from './Components/Home/Login';
 import CreateAccount from './Components/Home/CreateAccount';
 import SettingsLayout from './Layouts/SettingsLayout';
 import Links from './Components/Settings/Links';
-import ProfileSetting from './Components/Settings/ProfileSetting';
+import ProfileSettings from './Components/Settings/ProfileSettings';
+import Profile from './Components/Profile/Profile';
 
 function App() {
 
@@ -20,7 +21,10 @@ function App() {
         <Route index element={<Links />}/>
       </Route>
       <Route path="/profile-settings" element={<SettingsLayout />}>
-        <Route index element={<ProfileSetting />}/>
+        <Route index element={<ProfileSettings />}/>
+      </Route>
+      <Route path="/profile" element={<SettingsLayout />}>
+        <Route index element={<Profile />}/>
       </Route>
     </>
   ))
