@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Link , useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler} from "react-hook-form";
-import './Home.css';
+import './CreateAccount.css';
 import emailIcon from '../../assets/icon-email.svg';
 import passwordIcon from '../../assets/icon-password.svg';
-
 
 type Inputs = {
   emailAddress: string,
@@ -12,16 +11,11 @@ type Inputs = {
   confirmPassword: string,
 };
 
-function CreateAccount(){ 
-  const [tryAgain, setTryAgain] = useState<boolean>(false)
+const CreateAccount: React.FC = () => {
+  const [tryAgain, setTryAgain] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const {
-    register,
-    watch,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>();
+  const { register, watch, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
@@ -32,7 +26,11 @@ function CreateAccount(){
         },
         body: JSON.stringify(data),
       });
-  
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
       if (response.status === 201) {
         navigate('/');
       } else {
@@ -47,8 +45,7 @@ function CreateAccount(){
   const password = watch("password");
 
     return(
-        <div>
-            <div>
+        <div className='create-account-component'>
             <h3>Create account</h3>
             <p>Let's get you started sharing your links</p>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -67,7 +64,7 @@ function CreateAccount(){
                     paddingLeft: '30px',
                   }}
                   />
-                {errors.emailAddress && <p>{errors.emailAddress.message}</p>}
+                {errors.emailAddress && <p className='error' style={{margin:'0 0 -15px'}}>{errors.emailAddress.message}</p>}
                 <br />
                 <label htmlFor="password">Create password</label>
                 <br />
@@ -85,7 +82,7 @@ function CreateAccount(){
                     paddingLeft: '30px',
                   }}
                   />
-                {errors.password && <p>{errors.password.message}</p>}
+                {errors.password && <p className='error' style={{margin:'0 0 -15px'}}>{errors.password.message}</p>}
                 <br />
                 <label htmlFor="confirmPassword">Confirm password</label>
                 <br />
@@ -104,19 +101,17 @@ function CreateAccount(){
                     paddingLeft: '30px',
                   }}
                   />
-                {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
-            <p>Password must contain at least 8 characters</p>
-            <button type="submit" className='bg-button'>Create new account</button>
-            {tryAgain ? <p className='error'>Failed to create user please try again</p> : ""}
+                {errors.confirmPassword && <p className='error' style={{margin:'0px'}}>{errors.confirmPassword.message}</p>}
+                <button type="submit" className='bg-button' style={{marginTop:"1rem"}}>Create new account</button>
+                {tryAgain ? <p className='error'>Failed to create user please try again</p> : ""}
             </form>
             <div className='baseline'>
               <p>Already have an account?</p>
-            <Link to="/">
-              <button className='s-button' >Login</button>
-            </Link>
+              <Link to="/">
+                <button className='s-button' >Login</button>
+              </Link>
             </div>
         </div>
-    </div>
     );
 }
 

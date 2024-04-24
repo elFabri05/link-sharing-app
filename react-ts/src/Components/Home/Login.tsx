@@ -1,7 +1,7 @@
-import {useState} from 'react'
+import {useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import './Home.css';
+import './Login.css';
 import emailIcon from '../../assets/icon-email.svg';
 import passwordIcon from '../../assets/icon-password.svg';
 
@@ -10,14 +10,13 @@ type Inputs = {
   password: string,
 };
 
-function Login(){
-  const [auth, setAuth] = useState<boolean>(true)
+const Login: React.FC = () => {
+  const [auth, setAuth] = useState<boolean>(true);
+  const [failedLogin, setFailedLogin] = useState<boolean>(false);
+
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>();
+  const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
 
     try {
@@ -29,13 +28,18 @@ function Login(){
         },
         body: JSON.stringify(data),
       });
+
+      if (!response.ok) {
+        setFailedLogin(true);
+        throw new Error(`Error: ${response.status}`);
+      }
   
       if (response.ok) {
         const responseData = await response.json();
         console.log('Login successful:', responseData);
         navigate('/links-settings');
       } else {
-        setAuth(false)
+        setAuth(false);
         console.error('Failed to create user please try again');
       }
     } catch (error) {
@@ -44,7 +48,7 @@ function Login(){
   };
 
     return(
-        <div>
+        <div className='login-component'>
             <h3>Login</h3>
             <p>Add your details below to get back into the app</p>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -64,7 +68,7 @@ function Login(){
                     paddingLeft: '30px',
                   }}
                   />
-                {errors.emailAddress && <p>{errors.emailAddress.message}</p>}
+                {errors.emailAddress && <p className='error' style={{margin:'0 0 -15px'}}>{errors.emailAddress.message}</p>}
                 <br />
                 <label htmlFor="password">Password</label>
                 <br />
@@ -81,8 +85,9 @@ function Login(){
                     paddingLeft: '30px',
                   }}
                   />
-                {errors.password && <p>{errors.password.message}</p>}
-                <button type="submit" className='bg-button'>Login</button>
+                {errors.password && <p className='error' style={{margin:'0 0 -5px'}}>{errors.password.message}</p>}
+                {failedLogin ? <p className='error' style={{margin:'0 0 -5px'}}>Incorrect email or password</p> : ''}
+                <button type="submit" className='bg-button login-button' style={{marginTop:"1rem"}}>Login</button>
                 {!auth ? <p className='error'>Invalid email or password</p> : ""}
             </form>
             <div className='baseline'>

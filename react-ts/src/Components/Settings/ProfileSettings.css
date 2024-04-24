@@ -1,0 +1,176 @@
+.profile-settings-component{
+    width: 343px;
+    height: fit-content;
+    padding: .5rem 1.5rem;
+    background-color: #fff;
+    margin: 1rem 0;
+    border-radius: 5px;
+}
+
+.background-container{
+    background-color: #FAFAFA;
+    width: 295px;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.personal-data-container input{
+    width: 255px;
+}
+
+.img-upload-containter{
+    background-color: #DADADA;
+    width: 193px;
+    height: 193px;
+    border-radius: 5px;
+    display: grid;
+    place-items: center;
+}
+
+.img-upload{
+    background-image: url("../../assets/icon-upload-image.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position:35%;  
+    transform: translateY(1.5rem);
+    border: none;
+    width: auto;
+    text-indent: -9999px;
+    margin: 0 auto;
+}
+
+.upload-img-span{
+    color: #633CFF;
+    font-weight: 500;
+    font-size: 1rem;
+    transform: translateY(-1.5rem);
+}
+
+.img-upload:hover,
+.img-upload-containter:hover{
+    cursor: pointer;
+}
+
+.save-btn{
+    width: 295px;
+    margin-bottom: 1rem;
+}
+
+.save-btn-container{
+    border-top: 1px solid #DADADA;
+    width: 343px;
+    margin-left: -24px;
+    padding-top: 1rem;
+    padding-left: 1.5rem;
+}
+
+@media (min-width:376px){
+    .profile-settings-component{    
+        margin-top: 2rem;
+    }
+}
+
+@media (min-width: 767px){
+    .profile-settings-component{
+        width: 721px;
+        padding: .5rem 2.5rem;
+    }
+
+    .profile-picture-container{
+        width: 640px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    .img-upload-containter{
+        transform: translateY(-20%);
+    }
+
+    .profile-picture-text{
+        width: 125px;
+    }
+
+    .background-container{
+        width: 640px;
+    }
+
+    .personal-data-container{
+        padding: 1rem;
+    }
+
+    .personal-data-container label{
+        font-size: 14px;
+        font-weight: 400;
+    }
+ 
+    .form-personal-data {
+        display: grid;
+        grid-template-columns: 2fr 2fr;
+        align-items: center;
+        margin: 5px 0;
+        width: 100%;
+    }
+
+    .form-personal-data *{
+        margin: 0;
+    }
+
+    .form-personal-data input{
+        width: 344px;
+    }
+
+    .error{
+        margin-left: auto;
+    }
+
+    .save-btn-container{
+        display: grid;
+        width: 720px;
+        margin-left: -40px;
+        padding-right: 2.5rem;
+    }
+
+    .save-btn{
+        width: 91px;
+        justify-self: flex-end;
+    }
+}
+
+@media (min-width:1340px){
+    .settings-wrapper{
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .phone-mockup-container{
+        background-color: #FFF;
+        border-radius: 10px;
+        width: 560px;
+        height: fit-content;
+        margin: 2rem 0 1rem;
+        padding: 1.6rem;
+        display: grid;
+        justify-items: center;
+        position: relative;
+    }
+
+    .link-mockup{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;   
+        color:#fff;
+        width: 237px;
+        height: 46px;
+        border-radius: 7px;
+        z-index: 1000;
+    }
+
+    .link-mockup div{
+        flex-basis: 60%;
+        font-weight: 500;
+    }
+
+}

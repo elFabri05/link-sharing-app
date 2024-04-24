@@ -4,12 +4,11 @@
     box-sizing: border-box;
 }
 
-body {
+body , html{
     margin: 0;
     color: #333333;
-    /* background-color: #EFEBFF; */
     font-family: 'Instrument Sans', sans-serif;  
-    width: 375px;
+    height: 100%;
 }
 
 button:hover{
@@ -31,7 +30,7 @@ label{
 
 input{
     height: 48px;
-    width: 88%;
+    width: 311px;
     border-radius: 5px;
     border: 1px solid #D9D9D9;
     padding-left: 1rem;
@@ -45,19 +44,17 @@ input{
     color: #FFFFFF;
     font-weight: 700;
     height: 46px;
-    width: 88%;
-    margin-top: 10px; /*check this! */
+    width: 311px;
 }
 
 .bg-inverted-button{
-    /* text-decoration: none; */
     border: 1px solid #633CFF;
     border-radius: 8px;
     background-color: #FFFFFF ;
     color: #633CFF;
     font-weight: 700;
     height: 46px;
-    width: 88%;
+    width: 311px;
 }
 
 .s-button{
@@ -69,5 +66,9 @@ input{
 
 .error{
     color: #FF3939;
-    font-weight: 500;
+    font-weight: 400;
+}
+
+form label{
+    padding-top: 5rem;
 }

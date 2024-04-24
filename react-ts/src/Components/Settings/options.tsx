@@ -18,7 +18,7 @@ interface Option {
   } 
 
 const options : Option[] = [
-    {value: 'github', label: <div><img src={gitHubIcon} alt="GitHub Icon" /> GitHub</div>},
+    {value:'Github', label: <div><img src={gitHubIcon} alt="GitHub Icon" /> GitHub</div>},
     {value:"GitLab", label: <div><img src={gitLabIcon} alt="GitLab Icon" /> GitLab</div>},
     {value:"Hashnode", label: <div><img src={HashnodeIcon} alt="Hashnode Icon" /> Hashnode</div>},
     {value:"CodePen", label: <div><img src={CodePenIcon} alt="CodePen Icon" /> CodePen</div>},

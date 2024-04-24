@@ -9,13 +9,14 @@ import bcrypt from 'bcrypt';
 import session from 'express-session';
 import multer from 'multer';
 import sharp from 'sharp';
-
+import helmet from 'helmet';
 const Schema = mongoose.Schema;
 const LocalStrategy = passportLocal.Strategy;
 
 const app = express();
 app.use(express.json());
 app.use(cors({origin: 'http://localhost:5173', credentials: true, }));
+app.use(helmet());
 const port = 3300;
 const saltRounds = 10;
 
@@ -137,14 +138,13 @@ app.post('/links-settings', async (req, res) => {
 
   const userId = req.user._id;
   const { newLinks } = req.body;
-  
+
   try {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $set: { links: newLinks } },
       { new: true, runValidators: true }
       );
-  console.log(`${newLinks} have been saved`)
 
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });
@@ -158,7 +158,7 @@ app.post('/links-settings', async (req, res) => {
 });
 
 const upload = multer({
-  limits: { fileSize: 1500000 },
+  limits: { fileSize: 2500000 },
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) { 
       return cb(new Error('Please upload an image.'));
@@ -203,7 +203,6 @@ app.post('/profile-settings', upload.single('profilePicture'), async (req, res, 
 });
 
 app.get('/links-settings', async (req, res) => {
-  console.log('fetching links settings')
   if (!req.isAuthenticated()) {
     return res.status(401).send('User is not authenticated');
   }
@@ -215,7 +214,6 @@ app.get('/links-settings', async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    console.log('manso')
     res.json(user.links);
   } catch (error) {
     console.error('Error fetching user links:', error);
@@ -229,16 +227,22 @@ app.get('/profile-settings', async (req, res) => {
   }
 
   try {
-    const user = await User.findById(req.user.id).select('firstName lastName profileEmail');
+    const user = await User.findById(req.user.id).select('firstName lastName profileEmail profilePicture links');
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+    
+    const profilePictureBase64 = user.profilePicture ? `data:image/png;base64,${user.profilePicture.toString('base64')}` : null;
+
     res.json({
       firstName: user.firstName,
       lastName: user.lastName,
       profileEmail: user.profileEmail,
+      profilePicture: profilePictureBase64,
+      links: user.links,
     });
+
   } catch (error) {
     console.error('Error retrieving user:', error);
     res.status(500).json({ error: 'Internal server error' });

@@ -1,0 +1,22 @@
+.login-component{
+    width: 375px;
+    background-color: #fff;
+    margin: 0 auto;
+    padding: 40px;
+    padding-top: 0px;
+}
+
+@media (min-width: 767px){
+    .login-component{
+        width: 476px;
+        border-radius: 5px;
+    }
+    
+    .login-component input{
+        width: 396px;
+    }
+
+    .login-button{
+        width: 396px;
+    }
+}

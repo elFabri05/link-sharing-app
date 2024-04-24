@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import './HomeLayout.css';
 import LargeLogo from '../assets/logo-devlinks-large.svg';
 
-function HomeLayout(){
+const HomeLayout: React.FC = () => {
 
     return(
         <div className='home-layout'>

@@ -23,9 +23,7 @@ function App() {
       <Route path="/profile-settings" element={<SettingsLayout />}>
         <Route index element={<ProfileSettings />}/>
       </Route>
-      <Route path="/profile" element={<SettingsLayout />}>
-        <Route index element={<Profile />}/>
-      </Route>
+      <Route path="/profile" element={<Profile />}/>
     </>
   ))
 
