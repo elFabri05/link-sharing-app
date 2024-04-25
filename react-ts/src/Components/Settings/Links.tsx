@@ -39,7 +39,7 @@ const Links: React.FC = () => {
       }
     });
 
-    const { fields, append, update, remove } = useFieldArray({
+    const { fields, append, remove } = useFieldArray({
       control,
       name: "links"
     });
@@ -83,10 +83,6 @@ const Links: React.FC = () => {
             throw new Error(`Error: ${response.status}`);
           }
       
-          const responseData = await response.json();
-          fields.forEach((field, index) => {
-            update(index, { ...field, ...responseData[index] });
-          });
           setSavedLinks(true);
           
       } catch (error) {

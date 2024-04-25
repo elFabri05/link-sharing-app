@@ -6,7 +6,6 @@ import { platformColor } from "../../Utils/platformColor";
 import phoneMockup from '../../assets/illustration-phone-mockup.svg'
 import iconArrowRight from '../../assets/icon-arrow-right.svg';
 
-
 interface LinkData {
   id: string;
   platform: string;
@@ -32,7 +31,6 @@ const Profile: React.FC = () => {
 
   const [profile, setProfile] = useState<UserProfileData>({});
   const [savedProfileData, setSavedProfileData] = useState<boolean>(false);
-
 
   const { register, handleSubmit, setValue } = useForm<UserProfileForm>();
 
@@ -70,7 +68,8 @@ const Profile: React.FC = () => {
     if (data.profilePicture && data.profilePicture.length > 0) {
       const formData = new FormData();
       formData.append('profilePicture', data.profilePicture[0]);
-    
+      setValue('profilePicture', data.profilePicture);
+
       try {
         const response = await fetch('http://localhost:3300/profile-settings', {
           method: 'POST',
@@ -202,7 +201,7 @@ return(
           </div>
           <div className='save-btn-container'>
             <input type="submit" value="Save" className="bg-button save-btn"/>
-            {savedProfileData ? <p style={{color:'#633CFF'}}>Your data has been saved</p> : ''}
+            {savedProfileData ? <p style={{color:'#633CFF'}} className='saved-data-p'>Your data has been saved</p> : ''}
           </div>
       </form>
     </div>

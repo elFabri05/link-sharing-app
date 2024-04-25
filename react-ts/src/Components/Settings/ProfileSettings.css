@@ -84,10 +84,6 @@
         align-items: center;
     }
 
-    .img-upload-containter{
-        transform: translateY(-20%);
-    }
-
     .profile-picture-text{
         width: 125px;
     }
@@ -128,6 +124,7 @@
     .save-btn-container{
         display: grid;
         width: 720px;
+        height: 70px;
         margin-left: -40px;
         padding-right: 2.5rem;
     }
@@ -135,6 +132,10 @@
     .save-btn{
         width: 91px;
         justify-self: flex-end;
+    }
+
+    .saved-data-p{
+        transform: translateY(-70px);
     }
 }
 
