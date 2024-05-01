@@ -7,11 +7,11 @@ import "./Links.css";
 import options from "./options";
 import { platformColor } from "../../Utils/platformColor";
 
-import ilustrationEmpty from "../../assets/illustration-empty.svg";
-import dragAndDrop from "../../assets/icon-drag-and-drop.svg";
-import LinkIcon from "../../assets/icon-link.svg";
-import phoneMockup from '../../assets/illustration-phone-mockup.svg';
-import iconArrowRight from '../../assets/icon-arrow-right.svg';
+import ilustrationEmpty from "/assets/illustration-empty.svg";
+import dragAndDrop from "/assets/icon-drag-and-drop.svg";
+import LinkIcon from "/assets/icon-link.svg";
+import phoneMockup from '/assets/illustration-phone-mockup.svg';
+import iconArrowRight from '/assets/icon-arrow-right.svg';
 
 interface PlatformLink {
     id: string;

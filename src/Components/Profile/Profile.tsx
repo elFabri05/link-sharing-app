@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import './Profile.css';
 import { Link } from 'react-router-dom';
 import { platformColor } from '../../Utils/platformColor';
-import iconUploadImg from '../../assets/icon-upload-image.svg';
-import iconArrowRight from '../../assets/icon-arrow-right.svg';
+import iconUploadImg from '/assets/icon-upload-image.svg';
+import iconArrowRight from '/assets/icon-arrow-right.svg';
 
 interface PlatformLink {
     id: string;

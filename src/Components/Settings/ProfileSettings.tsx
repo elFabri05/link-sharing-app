@@ -3,8 +3,8 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import useMediaQuery from '../../Hooks/useMediaQuery';
 import "./ProfileSettings.css";
 import { platformColor } from "../../Utils/platformColor";
-import phoneMockup from '../../assets/illustration-phone-mockup.svg'
-import iconArrowRight from '../../assets/icon-arrow-right.svg';
+import phoneMockup from '/assets/illustration-phone-mockup.svg'
+import iconArrowRight from '/assets/icon-arrow-right.svg';
 
 interface LinkData {
   id: string;
