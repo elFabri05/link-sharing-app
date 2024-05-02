@@ -17,8 +17,8 @@ const app = express();
 app.use(express.json());
 app.use(cors({origin: 'https://link-sharing-app-elfabri.netlify.app', credentials: true, }));
 app.use(helmet());
-const port = 3300;
-const saltRounds = 10;
+const port = process.env.PORT || 3300;
+const saltRounds = process.env.SALT_ROUNDS || 10;
 
 app.use(session({ secret: "cats", 
                   resave: false, 
