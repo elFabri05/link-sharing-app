@@ -10,6 +10,7 @@ import session from 'express-session';
 import multer from 'multer';
 import sharp from 'sharp';
 import helmet from 'helmet';
+import dotenv from 'dotenv';
 
 const Schema = mongoose.Schema;
 const LocalStrategy = passportLocal.Strategy;

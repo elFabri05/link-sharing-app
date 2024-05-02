@@ -17,9 +17,11 @@ const CreateAccount: React.FC = () => {
 
   const { register, watch, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
-        const response = await fetch('https://localhost:3300/create-account', {
+        const response = await fetch(`${apiUrl}/create-account`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -44,10 +44,12 @@ const Links: React.FC = () => {
       name: "links"
     });
 
+    const apiUrl = import.meta.env.VITE_API_URL;
+
     useEffect(() => {
         const fetchLinks = async () => {
           try {
-            const response = await fetch('https://localhost:3300/links-settings', {
+            const response = await fetch(`${apiUrl}/links-settings`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -70,7 +72,7 @@ const Links: React.FC = () => {
       const onSubmit: SubmitHandler<FormValues> = async (data) => {
         console.log("Form submission data:", data);
       try {
-          const response = await fetch('https://localhost:3300/links-settings', {
+          const response = await fetch(`${apiUrl}/links-settings`, {
           method: 'POST',
           credentials: 'include',
           headers: {

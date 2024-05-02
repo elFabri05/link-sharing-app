@@ -23,11 +23,13 @@ const Profile: React.FC = () => {
 
     const [user, setUser] = useState<User | null>(null);
     const [error, setError] = useState<string | null>(null);
+
+    const apiUrl = import.meta.env.VITE_API_URL;
   
     useEffect(() => {
       const fetchUserProfile = async () => {
         try {
-          const response = await fetch('https://localhost:3300/profile', {
+          const response = await fetch(`${apiUrl}/profile`, {
             method: 'GET',
             credentials: 'include',
             headers: {

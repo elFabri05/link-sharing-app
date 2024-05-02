@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import useMediaQuery from '../Hooks/useMediaQuery';
-import './SettingsLayout.css'
+import './SettingsLayout.css';
 
 import smallLogo from "../../public/assets/logo-devlinks-small.svg";
 import iconLink from "../../public/assets/icon-link.svg";
@@ -12,7 +12,7 @@ import largeLogo from "../../public/assets/logo-devlinks-large.svg";
 const SettingsLayout: React.FC = () => {
     const [activeTab, setActiveTab] = useState<boolean>(true);
 
-    const isTablet: boolean = useMediaQuery(767)
+    const isTablet: boolean = useMediaQuery(767);
 
     const toggleLinkSettings = () : void => {
             setActiveTab(true);
