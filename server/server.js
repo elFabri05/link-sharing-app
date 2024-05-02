@@ -15,7 +15,7 @@ const LocalStrategy = passportLocal.Strategy;
 
 const app = express();
 app.use(express.json());
-app.use(cors({origin: 'http://localhost:5173', credentials: true, }));
+app.use(cors({origin: 'https://localhost:5173', credentials: true, }));
 app.use(helmet());
 const port = 3300;
 const saltRounds = 10;
@@ -23,7 +23,8 @@ const saltRounds = 10;
 app.use(session({ secret: "cats", 
                   resave: false, 
                   saveUninitialized: true, 
-                  /*cookie: { secure: false } For HTTPS: true */ }));
+                  cookie: { secure: true }
+                }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));

@@ -40,7 +40,7 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch('http://localhost:3300/profile-settings', {
+        const response = await fetch('https://localhost:3300/profile-settings', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -71,7 +71,7 @@ const Profile: React.FC = () => {
       setValue('profilePicture', data.profilePicture);
 
       try {
-        const response = await fetch('http://localhost:3300/profile-settings', {
+        const response = await fetch('https://localhost:3300/profile-settings', {
           method: 'POST',
           credentials: 'include',
           body: formData,
@@ -92,7 +92,7 @@ const Profile: React.FC = () => {
     };
   
     try {
-      const response = await fetch('http://localhost:3300/profile-settings', {
+      const response = await fetch('https://localhost:3300/profile-settings', {
         method: 'POST',
         credentials: 'include',
         headers: {
