@@ -68,7 +68,7 @@ passport.deserializeUser(async (id, done) => {
 });
 
 const mongoDb = "mongodb+srv://fabriziomaffoni:lRLPADPx9PhiX9KT@cluster0.ath8pdx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-mongoose.connect(mongoDb)
+mongoose.connect(mongoDb, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected successfully.'))
   .catch(err => console.error('MongoDB connection error:', err));
 
