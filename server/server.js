@@ -17,7 +17,7 @@ const LocalStrategy = passportLocal.Strategy;
 
 const app = express();
 app.use(express.json());
-app.use(cors({origin: 'https://link-sharing-app-elfabri.netlify.app', credentials: true, }));
+app.use(cors({origin: 'https://main--link-sharing-app-elfabri.netlify.app/', credentials: true, }));
 app.use(helmet());
 const port = process.env.PORT || 3300;
 const saltRounds = process.env.SALT_ROUNDS || 10;
