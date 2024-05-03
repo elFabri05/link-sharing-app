@@ -20,7 +20,6 @@ const Login: React.FC = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-
     try {
         const response = await fetch(`${apiUrl}`, {
         method: 'POST',

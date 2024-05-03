@@ -49,7 +49,7 @@ const Links: React.FC = () => {
     useEffect(() => {
         const fetchLinks = async () => {
           try {
-            const response = await fetch(`${apiUrl}/links-settings`, {
+            const response = await fetch(`https://link-sharing-app-elfabri.netlify.app/links-settings`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {

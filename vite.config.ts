@@ -4,16 +4,14 @@ import react from '@vitejs/plugin-react-swc';
 export default defineConfig({
   plugins: [react()],
   server: {
-    // Configure dev server settings (useful for local development)
-    port: 3000, // The default port for the Vite server, change if needed
-    strictPort: true, // If the port is occupied, Vite will exit instead of trying another port
+    port: parseInt(process.env.VITE_PORT) || 3302,
+    strictPort: true, 
     proxy: {
-      // Proxy API request to the backend during development
       '/api': {
-        target: 'http://localhost:5000', // Adjust if your Express server runs on a different port
+        target: process.env.VITE_API_URL,
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '') // Adjust if your API path differs
+        rewrite: path => path.replace(/^\/api/, '')
       }
     }
   },
-})
+});

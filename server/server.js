@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import cors from 'cors'; 
 import mongoose from 'mongoose';
@@ -10,17 +12,17 @@ import session from 'express-session';
 import multer from 'multer';
 import sharp from 'sharp';
 import helmet from 'helmet';
-import dotenv from 'dotenv';
 import serverlessHttp from 'serverless-http';
+
 
 const Schema = mongoose.Schema;
 const LocalStrategy = passportLocal.Strategy;
 
 const app = express();
 app.use(express.json());
-app.use(cors({origin: 'https://link-sharing-app-elfabri.netlify.app/', credentials: true, }));
+app.use(cors({origin: process.env.ALLOWED_ORIGIN, credentials: true, optionsSuccessStatus: 200 }));
 app.use(helmet());
-const port = process.env.PORT || 3300;
+const PORT = process.env.PORT || 3302;
 const saltRounds = process.env.SALT_ROUNDS || 10;
 
 app.use(session({ secret: "cats", 
@@ -68,7 +70,7 @@ passport.deserializeUser(async (id, done) => {
 });
 
 const mongoDb = "mongodb+srv://fabriziomaffoni:lRLPADPx9PhiX9KT@cluster0.ath8pdx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-mongoose.connect(mongoDb, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoDb)
   .then(() => console.log('MongoDB connected successfully.'))
   .catch(err => console.error('MongoDB connection error:', err));
 
@@ -281,11 +283,6 @@ app.get('/profile', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -293,12 +290,12 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../index.html'));
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`)
-})
-
 const handler = serverlessHttp(app);
-module.exports.handler = async (event, context) => {
+export const lambdaHandler = async (event, context) => {
   const result = await handler(event, context);
   return result;
 };
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`)
+})
