@@ -11,13 +11,14 @@ import multer from 'multer';
 import sharp from 'sharp';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import serverlessHttp from 'serverless-http';
 
 const Schema = mongoose.Schema;
 const LocalStrategy = passportLocal.Strategy;
 
 const app = express();
 app.use(express.json());
-app.use(cors({origin: 'https://main--link-sharing-app-elfabri.netlify.app/', credentials: true, }));
+app.use(cors({origin: 'https://link-sharing-app-elfabri.netlify.app/', credentials: true, }));
 app.use(helmet());
 const port = process.env.PORT || 3300;
 const saltRounds = process.env.SALT_ROUNDS || 10;
@@ -295,3 +296,9 @@ app.get('*', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`)
 })
+
+const handler = serverlessHttp(app);
+module.exports.handler = async (event, context) => {
+  const result = await handler(event, context);
+  return result;
+};
