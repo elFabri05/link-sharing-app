@@ -4,7 +4,7 @@
 
 [[redirects]]
 from = "/api/*"
-to = "https://backend.link-sharing-app-elfabri.netlify.app/"
+to = "https://backend.link-sharing-app-elfabri.netlify.app/:splat"
 status = 200
 force = true
   
