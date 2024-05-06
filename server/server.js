@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import dotenv from 'dotenv-flow';
 dotenv.config();
 import express from 'express';
 import cors from 'cors'; 
@@ -14,15 +14,14 @@ import sharp from 'sharp';
 import helmet from 'helmet';
 import serverlessHttp from 'serverless-http';
 
-
 const Schema = mongoose.Schema;
 const LocalStrategy = passportLocal.Strategy;
 
 const app = express();
 app.use(express.json());
-app.use(cors({origin: process.env.ALLOWED_ORIGIN, credentials: true, optionsSuccessStatus: 200 }));
+app.use(cors({origin: process.env.ALLOWED_ORIGIN || 'http://localhost:3302', credentials: true, optionsSuccessStatus: 200 }));
 app.use(helmet());
-const PORT = process.env.PORT || 3302;
+const PORT = process.env.PORT || 3301;
 const saltRounds = process.env.SALT_ROUNDS || 10;
 
 app.use(session({ secret: "cats", 
@@ -291,11 +290,11 @@ app.get('*', (req, res) => {
 });
 
 const handler = serverlessHttp(app);
-export const lambdaHandler = async (event, context) => {
+export const serverlessHandler = async (event, context) => {
   const result = await handler(event, context);
   return result;
 };
 
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`)
-})
+  console.log(`Server running at ${PORT}`)
+});
