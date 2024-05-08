@@ -1,18 +1,17 @@
-
-import iconCodePen from '/assets/icon-codepen.svg';
-import iconCodeWars from '/assets/icon-codewars.svg';
-import iconDevto from '/assets/icon-devto.svg';
-import iconFacebook from '/assets/icon-facebook.svg';
-import iconFrontendMentor from '/assets/icon-frontend-mentor.svg';
-import iconFreeCodeCamp from '/assets/icon-freecodecamp.svg';
-import iconGitHub from '/assets/icon-github.svg';
-import iconGitLab from '/assets/icon-gitlab.svg';
-import iconHashNode from '/assets/icon-hashnode.svg';
-import iconLinkedin from '/assets/icon-linkedin.svg';
-import iconStackOverFlow from '/assets/icon-stack-overflow.svg';
-import iconTwitch from '/assets/icon-twitch.svg';
-import iconTwitter from '/assets/icon-twitter.svg';
-import iconYoutube from '/assets/icon-youtube.svg';
+import iconCodePen from '../assets/icon-codepen.svg';
+import iconCodeWars from '../assets/icon-codewars.svg';
+import iconDevto from '../assets/icon-devto.svg';
+import iconFacebook from '../assets/icon-facebook.svg';
+import iconFrontendMentor from '../assets/icon-frontend-mentor.svg';
+import iconFreeCodeCamp from '../assets/icon-freecodecamp.svg';
+import iconGitHub from '../assets/icon-github.svg';
+import iconGitLab from '../assets/icon-gitlab.svg';
+import iconHashNode from '../assets/icon-hashnode.svg';
+import iconLinkedin from '../assets/icon-linkedin.svg';
+import iconStackOverFlow from '../assets/icon-stack-overflow.svg';
+import iconTwitch from '../assets/icon-twitch.svg';
+import iconTwitter from '../assets/icon-twitter.svg';
+import iconYoutube from '../assets/icon-youtube.svg';
 
 interface PlatformStyle {
     color: string;

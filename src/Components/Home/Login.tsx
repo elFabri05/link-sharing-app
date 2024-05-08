@@ -2,8 +2,8 @@ import {useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import './Login.css';
-import emailIcon from '/assets/icon-email.svg';
-import passwordIcon from '/assets/icon-password.svg';
+import emailIcon from '../../assets/icon-email.svg';
+import passwordIcon from '../../assets/icon-password.svg';
 
 type Inputs = {
   emailAddress: string,

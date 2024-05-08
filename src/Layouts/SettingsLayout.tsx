@@ -3,11 +3,11 @@ import { Link, Outlet } from "react-router-dom";
 import useMediaQuery from '../Hooks/useMediaQuery';
 import './SettingsLayout.css';
 
-import smallLogo from "../../public/assets/logo-devlinks-small.svg";
-import iconLink from "../../public/assets/icon-link.svg";
-import iconDetail from "../../public/assets/icon-profile-details-header.svg";
-import iconPreview from "../../public/assets/icon-preview-header.svg";
-import largeLogo from "../../public/assets/logo-devlinks-large.svg";
+import smallLogo from "../assets/logo-devlinks-small.svg";
+import iconLink from "../assets/icon-link.svg";
+import iconDetail from "../assets/icon-profile-details-header.svg";
+import iconPreview from "../assets/icon-preview-header.svg";
+import largeLogo from "../assets/logo-devlinks-large.svg";
 
 const SettingsLayout: React.FC = () => {
     const [activeTab, setActiveTab] = useState<boolean>(true);

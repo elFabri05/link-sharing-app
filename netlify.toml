@@ -1,0 +1,38 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  API_URL = "https://backend.link-sharing-app-elfabri.netlify.app/"
+
+[context.production.environment]
+  NODE_ENV = "production"
+
+[context.deploy-preview]
+  [context.deploy-preview.environment]
+    NODE_ENV = "development"
+
+[context.branch-deploy]
+  [context.branch-deploy.environment]
+    NODE_ENV = "development"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://backend.link-sharing-app-elfabri.netlify.app/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[headers]]
+for = "/*"
+[headers.values]
+  Access-Control-Allow-Origin = "http://localhost:3302"
+  Access-Control-Allow-Credentials = "true"
+  X-Content-Type-Options = "nosniff"
+  X-Frame-Options = "DENY"
+  X-XSS-Protection = "1; mode=block"
