@@ -27,7 +27,7 @@ const saltRounds = process.env.SALT_ROUNDS || 10;
 app.use(session({ secret: "cats", 
                   resave: false, 
                   saveUninitialized: true, 
-                  cookie: { secure: true }
+                  cookie: { secure: process.env.NODE_ENV === 'production' }
                 }));
 app.use(passport.initialize());
 app.use(passport.session());

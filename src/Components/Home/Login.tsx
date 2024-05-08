@@ -18,6 +18,7 @@ const Login: React.FC = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
   const apiUrl = import.meta.env.VITE_API_URL;
+  console.log(apiUrl)
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {

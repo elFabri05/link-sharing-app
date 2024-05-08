@@ -29,7 +29,7 @@ const Profile: React.FC = () => {
     useEffect(() => {
       const fetchUserProfile = async () => {
         try {
-          const response = await fetch(`${apiUrl}/profile`, {
+          const response = await fetch(`${apiUrl}profile`, {
             method: 'GET',
             credentials: 'include',
             headers: {

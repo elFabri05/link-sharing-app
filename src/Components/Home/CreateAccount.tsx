@@ -21,7 +21,7 @@ const CreateAccount: React.FC = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
-        const response = await fetch(`${apiUrl}/create-account`, {
+        const response = await fetch(`${apiUrl}create-account`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
