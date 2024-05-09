@@ -1,8 +1,9 @@
 [build]
-  command = "npm install typescript && npm run build"
+  command = "npm run build"
   publish = "dist"
 
 [build.environment]
+  NODE_VERSION=22.1.0
   API_URL = "https://backend.link-sharing-app-elfabri.netlify.app/"
 
 [context.production.environment]
