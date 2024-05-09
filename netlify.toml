@@ -3,7 +3,7 @@
   publish = "dist"
 
 [build.environment]
-  NODE_VERSION=22.1.0
+  NODE_VERSION="18"
   API_URL = "https://backend.link-sharing-app-elfabri.netlify.app/"
 
 [context.production.environment]
