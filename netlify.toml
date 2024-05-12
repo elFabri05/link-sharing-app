@@ -1,5 +1,5 @@
 [build]
-  command = "npm install && vite build"
+  command = "npm install && npx vite build"
   publish = "dist"
 
 [build.environment]
@@ -7,7 +7,7 @@
   API_URL = "https://backend.link-sharing-app-elfabri.netlify.app/"
 
 [context.production.environment]
-  NODE_VERSION = "16.13.0"
+  NODE_VERSION = "20"
   NODE_ENV = "production"
 
 [context.deploy-preview]
