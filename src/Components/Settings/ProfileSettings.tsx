@@ -92,7 +92,7 @@ const Profile: React.FC = () => {
       lastName: data.lastName || profile.lastName,
       email: data.email || profile.profileEmail,
     };
-  
+
     try {
       const response = await fetch(`${apiUrl}profile-settings`, {
         method: 'POST',
@@ -149,6 +149,7 @@ return(
                         backgroundSize: 'cover',  
                         backgroundPosition: 'center', 
                         backgroundRepeat: 'no-repeat',
+                        opacity: '0.7',
                       }}
                   >
                       <input 
@@ -212,4 +213,3 @@ return(
 }
 
 export default Profile;
-

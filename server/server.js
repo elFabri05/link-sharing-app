@@ -1,5 +1,4 @@
 import dotenv from 'dotenv-flow';
-dotenv.config();
 import express from 'express';
 import cors from 'cors'; 
 import mongoose from 'mongoose';
@@ -14,6 +13,8 @@ import sharp from 'sharp';
 import helmet from 'helmet';
 import serverlessHttp from 'serverless-http';
 
+dotenv.config();
+
 const Schema = mongoose.Schema;
 const LocalStrategy = passportLocal.Strategy;
 
@@ -22,7 +23,7 @@ app.use(express.json());
 app.use(cors({origin: process.env.ALLOWED_ORIGIN || 'http://localhost:3302', credentials: true, optionsSuccessStatus: 200 }));
 app.use(helmet());
 const PORT = process.env.PORT || 3301;
-const saltRounds = process.env.SALT_ROUNDS || 10;
+const saltRounds = parseInt(process.env.SALT_ROUNDS, 10);
 
 app.use(session({ secret: "cats", 
                   resave: false, 
@@ -68,7 +69,7 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-const mongoDb = "mongodb+srv://fabriziomaffoni:lRLPADPx9PhiX9KT@cluster0.ath8pdx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoDb = process.env.MONGO_URI;
 mongoose.connect(mongoDb)
   .then(() => console.log('MongoDB connected successfully.'))
   .catch(err => console.error('MongoDB connection error:', err));
@@ -146,9 +147,9 @@ app.post('/links-settings', async (req, res) => {
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { $set: { links: newLinks } },
-      { new: true, runValidators: true }
+        userId,
+        { $set: { links: newLinks } },
+        { new: true, runValidators: true }
       );
 
     if (!updatedUser) {
@@ -176,7 +177,7 @@ app.post('/profile-settings', upload.single('profilePicture'), async (req, res, 
   if (!req.isAuthenticated()) {
     return res.status(401).send('User is not authenticated');
   }
-  
+
   if (req.file) {
     const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer();
     await User.findByIdAndUpdate(req.user.id, { profilePicture: buffer });
