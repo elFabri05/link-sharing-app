@@ -30,6 +30,7 @@ interface FormValues {
 const Links: React.FC = () => {
     const [addNewLink, setAddNewLink] = useState<boolean>(false);
     const [savedLinks, setSavedLinks] = useState<boolean>(false);
+    
 
     const isDesktop: boolean = useMediaQuery(1340);
 
@@ -86,7 +87,7 @@ const Links: React.FC = () => {
           }
       
           setSavedLinks(true);
-          
+      
       } catch (error) {
           console.error('Failed to submit data:', error);
       }
@@ -219,11 +220,11 @@ const Links: React.FC = () => {
                               <p className='error' style={{margin:'0 0 -15px'}}>{errors.links[index]?.link?.message}</p>
                             )}
                           </div>
-                    ))}
-                    <div className='links-save-btn-container'>
-                        <button type="submit" className="bg-button links-save-btn">Save</button>
-                        {savedLinks && <p style={{color:'#633CFF'}}>Your links have been saved</p>}
-                    </div>
+                      ))}
+                      <div className='links-save-btn-container'>
+                          <button type="submit" className="bg-button links-save-btn">Save</button>
+                          {savedLinks && <p style={{color:'#633CFF'}}>Your links have been saved</p>}
+                      </div>
                     </form>
                     )
                 }

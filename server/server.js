@@ -20,9 +20,13 @@ const LocalStrategy = passportLocal.Strategy;
 
 const app = express();
 app.use(express.json());
-app.use(cors({origin: process.env.ALLOWED_ORIGIN || 'http://localhost:3302', credentials: true, optionsSuccessStatus: 200 }));
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+  optionsSuccessStatus: 200
+}));
 app.use(helmet());
-const PORT = process.env.PORT || 3301;
+const PORT = process.env.PORT;
 const saltRounds = parseInt(process.env.SALT_ROUNDS, 10);
 
 app.use(session({ secret: "cats", 
@@ -256,7 +260,6 @@ app.get('/profile-settings', async (req, res) => {
 });
 
 app.get('/profile', async (req, res) => {
-  console.log('Attempting to retrieve user profile');
   if (!req.isAuthenticated()) {
     console.log("User is not authenticated");
     return res.status(401).send({ message: 'User is not authenticated' });
