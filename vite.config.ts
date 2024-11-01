@@ -10,5 +10,8 @@ export default defineConfig(({ mode }) => {
       port: parseInt(env.VITE_PORT, 10) || 3000,  // Use VITE_PORT from .env, fallback to 3000
       strictPort: true,  // If the port is already in use, it will not increment to another
     },
+    define: {
+      'process.env.ALLOWED_ORIGIN': JSON.stringify(process.env.ALLOWED_ORIGIN || 'http://localhost:3000')
+    }
   };
 });

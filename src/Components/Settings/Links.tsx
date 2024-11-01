@@ -30,7 +30,6 @@ interface FormValues {
 const Links: React.FC = () => {
     const [addNewLink, setAddNewLink] = useState<boolean>(false);
     const [savedLinks, setSavedLinks] = useState<boolean>(false);
-    
 
     const isDesktop: boolean = useMediaQuery(1340);
 
@@ -45,7 +44,9 @@ const Links: React.FC = () => {
       name: "links"
     });
 
-    const apiUrl = import.meta.env.VITE_API_URL;
+    const apiUrl = import.meta.env.PROD
+    ? ''
+    : import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchLinks = async () => {

@@ -11,14 +11,14 @@ type Inputs = {
 };
 
 const Login: React.FC = () => {
-  const [auth, setAuth] = useState<boolean>(true);
   const [failedLogin, setFailedLogin] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
-  const apiUrl = import.meta.env.VITE_API_URL;
-  console.log(apiUrl)
+  const apiUrl = import.meta.env.PROD
+  ? ''
+  : import.meta.env.VITE_API_URL;
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
@@ -41,7 +41,6 @@ const Login: React.FC = () => {
         console.log('Login successful:', responseData);
         navigate('/links-settings');
       } else {
-        setAuth(false);
         console.error('Failed to create user please try again');
       }
     } catch (error) {
@@ -54,44 +53,61 @@ const Login: React.FC = () => {
             <h3>Login</h3>
             <p>Add your details below to get back into the app</p>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <label htmlFor="emailAddress">Email adress</label>
-                <br /> 
-                <input 
-                {...register('emailAddress', { required: 'Email is required', 
-                pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' } })}
-                type="email"
-                id='emailAddress'
-                name='emailAddress'
-                placeholder='e.g. alex@gmail.com' 
-                style={{
-                    backgroundImage : `url(${emailIcon})`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: '.5rem .9rem',
-                    paddingLeft: '30px',
+              <label htmlFor="emailAddress">Email address</label>
+              <br /> 
+              <input 
+                  {...register('emailAddress', { 
+                      required: 'Email is required', 
+                      pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' } 
+                  })}
+                  type="email"
+                  id="emailAddress"
+                  name="emailAddress"
+                  placeholder="e.g. alex@gmail.com"
+                  autoComplete="email" // Add autocomplete for email
+                  style={{
+                      backgroundImage : `url(${emailIcon})`,
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: '.5rem .9rem',
+                      paddingLeft: '30px',
                   }}
-                  />
-                {errors.emailAddress && <p className='error' style={{margin:'0 0 -15px'}}>{errors.emailAddress.message}</p>}
-                <br />
-                <label htmlFor="password">Password</label>
-                <br />
-                <input 
-                {...register('password', { required: 'Password is required' })}
-                type="password"
-                id='password'
-                name='password'
-                placeholder='Enter your password' 
-                style={{
-                    backgroundImage : `url(${passwordIcon})`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: '.5rem .9rem',
-                    paddingLeft: '30px',
+              />
+              {errors.emailAddress && (
+                  <p className="error" style={{ margin: '0 0 -15px' }}>
+                      {errors.emailAddress.message}
+                  </p>
+              )}
+              <br />
+              <label htmlFor="password">Password</label>
+              <br />
+              <input 
+                  {...register('password', { required: 'Password is required' })}
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Enter your password"
+                  autoComplete="new-password" // Add autocomplete for password
+                  style={{
+                      backgroundImage : `url(${passwordIcon})`,
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: '.5rem .9rem',
+                      paddingLeft: '30px',
                   }}
-                  />
-                {errors.password && <p className='error' style={{margin:'0 0 -5px'}}>{errors.password.message}</p>}
-                {failedLogin ? <p className='error' style={{margin:'0 0 -5px'}}>Incorrect email or password</p> : ''}
-                <button type="submit" className='bg-button login-button' style={{marginTop:"1rem"}}>Login</button>
-                {!auth ? <p className='error'>Invalid email or password</p> : ""}
-            </form>
+              />
+              {errors.password && (
+                  <p className="error" style={{ margin: '0 0 -5px' }}>
+                      {errors.password.message}
+                  </p>
+              )}
+              {failedLogin && (
+                  <p className="error" style={{ margin: '0 0 -5px' }}>
+                      Incorrect email or password
+                  </p>
+              )}
+              <button type="submit" className="bg-button login-button" style={{ marginTop: "1rem" }}>
+                  Login
+              </button>
+          </form>
             <div className='baseline'>
               <p>Don't you have an account?</p>
             <Link to="/create-account">

@@ -18,10 +18,14 @@ dotenv.config();
 const Schema = mongoose.Schema;
 const LocalStrategy = passportLocal.Strategy;
 
+
 const app = express();
+
+const allowedOrigin = process.env.ALLOWED_ORIGIN || 'http://localhost:3000';
+
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: allowedOrigin,
   credentials: true,
   optionsSuccessStatus: 200
 }));
@@ -129,7 +133,14 @@ app.post("/", (req, res, next) => {
 
 app.post('/create-account', async (req, res) => {
   const { emailAddress, password } = req.body;
+
   try {
+    const existingUser = await User.findOne({ emailAddress });
+    if (existingUser) {
+      res.status(409).json({ error: 'Email already in use' });
+      return;
+    }
+
     const newUser = await User.create({
       emailAddress,
       password,
