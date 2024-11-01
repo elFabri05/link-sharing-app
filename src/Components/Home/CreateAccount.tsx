@@ -12,7 +12,6 @@ type Inputs = {
 };
 
 const CreateAccount: React.FC = () => {
-  const [tryAgain, setTryAgain] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -24,7 +23,6 @@ const CreateAccount: React.FC = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
       try {
-        setTryAgain(false);
         setErrorMessage(null);
 
         const response = await fetch(`${apiUrl}create-account`, {
@@ -36,7 +34,6 @@ const CreateAccount: React.FC = () => {
         });
 
         if (response.status === 409) {
-          setTryAgain(true);
           setErrorMessage('This email is already in use. Please try a different email.');
           return;
         }
@@ -48,12 +45,10 @@ const CreateAccount: React.FC = () => {
         if (response.status === 201) {
           navigate('/');
         } else {
-          setTryAgain(true);
           console.error('Failed to create user, please try again');
         }
       } catch (error) {
         console.error('Failed to create account:', error);
-        setTryAgain(true);
         setErrorMessage('Failed to create account. Please try again.');
       }
   };
@@ -136,7 +131,6 @@ const CreateAccount: React.FC = () => {
           <button type="submit" className="bg-button" style={{ marginTop: "1rem" }}>
             Create new account
           </button>
-          {tryAgain && <p className="error">Something went wrong. Please try again.</p>}
           {errorMessage && <p className="error">{errorMessage}</p>}
       </form>
       <div className='baseline'>
