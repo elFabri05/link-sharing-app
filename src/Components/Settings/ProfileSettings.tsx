@@ -37,14 +37,10 @@ const Profile: React.FC = () => {
   const isTablet: boolean = useMediaQuery(767);
   const isDesktop: boolean = useMediaQuery(1340);
 
-  const apiUrl = import.meta.env.PROD
-  ? ''
-  : import.meta.env.VITE_API_URL;
-
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`${apiUrl}profile-settings`, {
+        const response = await fetch(`/api/profile-settings`, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -75,7 +71,7 @@ const Profile: React.FC = () => {
       setValue('profilePicture', data.profilePicture);
 
       try {
-        const response = await fetch(`${apiUrl}profile-settings`, {
+        const response = await fetch(`/api/profile-settings`, {
           method: 'POST',
           credentials: 'include',
           body: formData,
@@ -96,7 +92,7 @@ const Profile: React.FC = () => {
     };
 
     try {
-      const response = await fetch(`${apiUrl}profile-settings`, {
+      const response = await fetch(`/api/profile-settings`, {
         method: 'POST',
         credentials: 'include',
         headers: {

@@ -16,13 +16,9 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
-  const apiUrl = import.meta.env.PROD
-  ? ''
-  : import.meta.env.VITE_API_URL;
-
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
-        const response = await fetch(`${apiUrl}`, {
+        const response = await fetch(`/api/`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -64,7 +60,7 @@ const Login: React.FC = () => {
                   id="emailAddress"
                   name="emailAddress"
                   placeholder="e.g. alex@gmail.com"
-                  autoComplete="email" // Add autocomplete for email
+                  autoComplete="email" 
                   style={{
                       backgroundImage : `url(${emailIcon})`,
                       backgroundRepeat: 'no-repeat',
@@ -86,7 +82,7 @@ const Login: React.FC = () => {
                   id="password"
                   name="password"
                   placeholder="Enter your password"
-                  autoComplete="new-password" // Add autocomplete for password
+                  autoComplete="new-password"
                   style={{
                       backgroundImage : `url(${passwordIcon})`,
                       backgroundRepeat: 'no-repeat',

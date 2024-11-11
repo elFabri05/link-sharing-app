@@ -27,10 +27,11 @@ app.use(express.json());
 app.use(cors({
   origin: allowedOrigin,
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 }));
 app.use(helmet());
-const PORT = process.env.PORT;
+
+const PORT = process.env.PORT || 3303;
 const saltRounds = parseInt(process.env.SALT_ROUNDS, 10);
 
 app.use(session({ secret: "cats", 
