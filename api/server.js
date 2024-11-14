@@ -7,17 +7,17 @@ import { fileURLToPath } from 'url';
 import passport from 'passport';
 import passportLocal from 'passport-local';
 import bcrypt from 'bcrypt';
-import session from 'express-session';
 import multer from 'multer';
 import sharp from 'sharp';
 import helmet from 'helmet';
 import serverlessHttp from 'serverless-http';
+import jwt from 'jsonwebtoken';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 
 dotenv.config();
 
 const Schema = mongoose.Schema;
 const LocalStrategy = passportLocal.Strategy;
-
 
 const app = express();
 
@@ -32,51 +32,7 @@ app.use(cors({
 app.use(helmet());
 
 const PORT = process.env.PORT || 3303;
-const saltRounds = parseInt(process.env.SALT_ROUNDS, 10);
-
-app.use(session({ secret: "cats", 
-                  resave: false, 
-                  saveUninitialized: true, 
-                  cookie: { secure: process.env.NODE_ENV === 'production' }
-                }));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(express.urlencoded({ extended: false }));
-
-passport.use(
-  new LocalStrategy({
-    usernameField: 'emailAddress'
-  }, async (emailAddress, password, done) => {
-    try {
-      const user = await User.findOne({ emailAddress: emailAddress});
-      if (!user) {
-        return done(null, false, { message: "Incorrect username" });
-      }
-
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return done(null, false, { message: "Incorrect password" });
-      }
-      
-      return done(null, user);
-    } catch(err) {
-      return done(err);
-    }
-  })
-);
-
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch(err) {
-    done(err);
-  }
-});
+const saltRounds = parseInt(process.env.SALT_ROUNDS, 10) || 10;
 
 const mongoDb = process.env.MONGO_URI;
 mongoose.connect(mongoDb)
@@ -86,6 +42,12 @@ mongoose.connect(mongoDb)
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo connection error"));
 
+const jwtSecret = process.env.JWT_SECRET || 'your_jwt_secret'; // Use a strong secret in production
+
+app.use(passport.initialize());
+app.use(express.urlencoded({ extended: false }));
+
+// User Schema and Model
 const LinkSchema = new Schema({
   platform: String,
   link: String,
@@ -115,23 +77,69 @@ UserSchema.pre('save', async function(next) {
 
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
+// Passport Local Strategy for Login
+passport.use(
+  new LocalStrategy({
+    usernameField: 'emailAddress'
+  }, async (emailAddress, password, done) => {
+    try {
+      const user = await User.findOne({ emailAddress: emailAddress });
+      if (!user) {
+        return done(null, false, { message: "Incorrect email address" });
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return done(null, false, { message: "Incorrect password" });
+      }
+      
+      return done(null, user);
+    } catch(err) {
+      return done(err);
+    }
+  })
+);
+
+// Passport JWT Strategy for Protected Routes
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: jwtSecret,
+};
+
+passport.use(
+  new JwtStrategy(jwtOptions, async (jwt_payload, done) => {
+    try {
+      const user = await User.findById(jwt_payload.sub);
+      if (!user) {
+        return done(null, false);
+      }
+      return done(null, user);
+    } catch (err) {
+      done(err, false);
+    }
+  })
+);
+
+// Login Route
 app.post("/", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
+  passport.authenticate("local", { session: false }, (err, user, info) => {
     if (err) {
       return next(err);
     }
     if (!user) {
       return res.status(401).send({ success: false, message: info.message });
     }
-    req.logIn(user, function(err) {
-      if (err) {
-        return next(err);
-      }
-      return res.status(202).send({ success: true, message: "Authenticated successfully" });
-    });
+    // Generate JWT Token
+    const payload = {
+      sub: user.id,
+      iat: Date.now(),
+    };
+    const token = jwt.sign(payload, jwtSecret, { expiresIn: '1h' });
+    return res.status(200).json({ token: `Bearer ${token}`, message: "Authenticated successfully" });
   })(req, res, next);
 });
 
+// Create Account Route
 app.post('/create-account', async (req, res) => {
   const { emailAddress, password } = req.body;
 
@@ -146,27 +154,27 @@ app.post('/create-account', async (req, res) => {
       emailAddress,
       password,
     });
-    res.status(201).json(newUser);
+    res.status(201).json({ message: 'Account created successfully' });
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-app.post('/links-settings', async (req, res) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).send('User is not authenticated');
-  }
+// Middleware to Protect Routes
+const authenticateJwt = passport.authenticate('jwt', { session: false });
 
+// Links Settings Route
+app.post('/links-settings', authenticateJwt, async (req, res) => {
   const userId = req.user._id;
   const { newLinks } = req.body;
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        { $set: { links: newLinks } },
-        { new: true, runValidators: true }
-      );
+      userId,
+      { $set: { links: newLinks } },
+      { new: true, runValidators: true }
+    );
 
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });
@@ -179,6 +187,7 @@ app.post('/links-settings', async (req, res) => {
   }
 });
 
+// Upload Middleware for Profile Picture
 const upload = multer({
   limits: { fileSize: 2500000 },
   fileFilter(req, file, cb) {
@@ -189,16 +198,12 @@ const upload = multer({
   }
 });
 
-app.post('/profile-settings', upload.single('profilePicture'), async (req, res, next) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).send('User is not authenticated');
-  }
-
+// Profile Settings Route
+app.post('/profile-settings', authenticateJwt, upload.single('profilePicture'), async (req, res, next) => {
   if (req.file) {
     const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer();
     await User.findByIdAndUpdate(req.user.id, { profilePicture: buffer });
   }
-
   next();
 }, async (req, res) => {
   const userId = req.user._id;
@@ -224,11 +229,8 @@ app.post('/profile-settings', upload.single('profilePicture'), async (req, res, 
   res.status(400).send({ error: error.message });
 });
 
-app.get('/links-settings', async (req, res) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).send('User is not authenticated');
-  }
-
+// Get Links Settings Route
+app.get('/links-settings', authenticateJwt, async (req, res) => {
   const userId = req.user._id;
 
   try {
@@ -243,11 +245,8 @@ app.get('/links-settings', async (req, res) => {
   }
 });
 
-app.get('/profile-settings', async (req, res) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).send('User is not authenticated');
-  }
-
+// Get Profile Settings Route
+app.get('/profile-settings', authenticateJwt, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('firstName lastName profileEmail profilePicture links');
 
@@ -271,12 +270,8 @@ app.get('/profile-settings', async (req, res) => {
   }
 });
 
-app.get('/profile', async (req, res) => {
-  if (!req.isAuthenticated()) {
-    console.log("User is not authenticated");
-    return res.status(401).send({ message: 'User is not authenticated' });
-  }
-
+// Get Profile Route
+app.get('/profile', authenticateJwt, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-emailAddress -password');
     if (!user) {
@@ -298,19 +293,27 @@ app.get('/profile', async (req, res) => {
   }
 });
 
+// Serve Static Files
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../index.html'));
-});
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../dist')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+  });
+} else {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../index.html'));
+  });
+}
 
-const handler = serverlessHttp(app);
-export const serverlessHandler = async (event, context) => {
-  const result = await handler(event, context);
-  return result;
-};
+// Conditional app.listen for Local Development
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server running at ${PORT}`);
+  });
+}
 
-app.listen(PORT, () => {
-  console.log(`Server running at ${PORT}`)
-});
+// Export the handler for Vercel
+export default serverlessHttp(app);
